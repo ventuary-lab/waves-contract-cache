@@ -64,7 +64,7 @@ module.exports = class TransactionListener {
         try {
             response = await axios.get(`${this.app.nodeUrl}/transactions/address/${this.app.dApp}/limit/${pageSize}${query}`);
         } catch (e) {
-            console.error(`TransactionListener Error on fetch transactions: ${String(e)}`);
+            console.error(`TransactionListener Error on fetch transactions: ${String(e)}, ${JSON.stringify(e.response.data)}`);
             throw e;
         }
 
@@ -94,8 +94,14 @@ module.exports = class TransactionListener {
                 try {
                     result = await axios.get(`${this.app.nodeUrl}/debug/stateChanges/info/${transaction.id}`);
                 } catch (e) {
-                    console.error(`TransactionListener Error on fetch transaction info: ${String(e)}`);
-                    throw e;
+                    if (e.response.data.error === 312) { // transaction type not supported
+                        result = {
+                            data: [],
+                        };
+                    } else {
+                        console.error(`TransactionListener Error on fetch transaction info: ${String(e)}, ${JSON.stringify(e.response.data)}`);
+                        throw e;
+                    }
                 }
 
                 transaction.info = result.data;

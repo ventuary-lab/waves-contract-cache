@@ -9,7 +9,7 @@ module.exports = class RedisStorage extends BaseStorage {
 
         // Create redis connection
         this._namespace = params.namespace || 'waves-contract-cache';
-        this._redisClient = redis.createClient(params.redis || {});
+        this._redisClient = params.redisClient || redis.createClient(params.redis || {});
     }
 
     get(key) {

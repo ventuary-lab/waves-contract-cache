@@ -64,7 +64,7 @@ module.exports = class WavesContractCache {
             const sender = transaction.sender;
 
             if (_get(transaction, 'info.stateChanges.data')) {
-                const keys = transaction.info.stateChanges.data.map(item => item.key);
+                const keys = transaction.info ? transaction.info.stateChanges.data.map(item => item.key) : [];
                 if (keys.length > 0) {
                     this.logger.debug('Income transaction: ' + method + '(' + args.join(', ') + '), sender ' + sender + ', keys: ' + JSON.stringify(keys));
 
